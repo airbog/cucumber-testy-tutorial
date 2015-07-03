@@ -2,30 +2,18 @@ Feature: Login
 
   Scenario: Successful Login
     Given I access login page
-    And I insert valid credentials
+    And I insert "eu@fast.com"/"eu.pass" credentials
     When I click login button
     Then I check if user was logged in
 
-  Scenario: Login wrong credentials
+  Scenario Outline: Failed login
     Given I access login page
-    And I insert invalid credentials
-    When I click login button
-    Then I expect invalid credentials message
-
-  Scenario: Login no email entered
-    Given I access login page
-    And I insert only password
-    When I click login button
-    Then I expect no email message
-
-  Scenario: Login no password entered
-    Given I access login page
-    And I insert only email
-    When I click login button
-    Then I expect no password message
-
-  Scenario: Login no credentials inserted entered
-    Given I access login page
-    When I click login button
-    Then I expect no email message
-
+    When I enter "<email>"/"<pass>" credentials
+    And I click login button
+    Then I expect "<message>" error message
+  Examples:
+    | email            | pass         | message                     |
+    |                  | eu.pass      | Please enter your email!    |
+    | eu@fast.com      |              | Please enter your password! |
+    |                  |              | Please enter your email!    |
+    | invalid@fast.com | invalid.pass | Invalid user or password!   |
