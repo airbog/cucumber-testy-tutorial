@@ -1,9 +1,5 @@
 Feature: Login
 
-  Scenario: Open any web page
-    Given I open this url "http://google.com"
-    Then I send 5 into search field
-
   Scenario: Successful Login
     Given I access login page
     And I insert valid credentials
@@ -15,4 +11,21 @@ Feature: Login
     And I insert invalid credentials
     When I click login button
     Then I expect invalid credentials message
+
+  Scenario: Login no email entered
+    Given I access login page
+    And I insert only password
+    When I click login button
+    Then I expect no email message
+
+  Scenario: Login no password entered
+    Given I access login page
+    And I insert only email
+    When I click login button
+    Then I expect no password message
+
+  Scenario: Login no credentials inserted entered
+    Given I access login page
+    When I click login button
+    Then I expect no email message
 
