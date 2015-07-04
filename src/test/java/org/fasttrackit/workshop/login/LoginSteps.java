@@ -7,18 +7,24 @@ import cucumber.api.java.en.When;
 
 import org.fasttrackit.util.TestBaseNative;
 import org.fasttrackit.workshop.pagefactory.login.LoginPage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 public class LoginSteps extends TestBaseNative {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginSteps.class);
 
-    LoginPage loginPage = new LoginPage();
+    LoginPage loginPage;
+
+    public LoginSteps() {
+        initPage();
+    }
+
+    public void initPage() {
+        loginPage = PageFactory.
+                initElements(driver, LoginPage.class);
+    }
 
     @Given("^I access login page$")
     public void I_access_login_page() {
@@ -27,53 +33,29 @@ public class LoginSteps extends TestBaseNative {
 
     @And("^I insert \"([^\"]*)\"/\"([^\"]*)\" credentials$")
     public void I_insert_credentials(String emailValue, String passwordValue) {
-        insertEmail(emailValue);
-        insertPassword(passwordValue);
+        loginPage.enterEmail(emailValue);
+        loginPage.enterPassword(passwordValue);
     }
 
     @When("^I click login button$")
     public void I_click_login_button() {
-        loginPage.clickOnLoginButton(driver);
+        loginPage.clickOnLoginButton();
     }
 
     @Then("^I check if user was logged in$")
     public void I_check_if_user_was_logged_in() {
-        WebElement logoutButton = driver.findElement(By.linkText("Logout"));
-        assertThat(logoutButton.isDisplayed(), is(true));
+        loginPage.checkLogoutButton();
     }
 
     @Then("^I expect \"([^\"]*)\" error message$")
     public void I_expect_message(String expectedMessage) {
-        errorMessageShouldBePresent(expectedMessage);
+        loginPage.errorMessageShouldBePresent(expectedMessage);
     }
 
     @When("^I enter \"([^\"]*)\"/\"([^\"]*)\" credentials$")
     public void I_enter_credentials(String expectedEmail, String expectedPassword) {
-        insertEmail(expectedEmail);
-        insertPassword(expectedPassword);
-    }
-
-    @Given("^I successfully login$")
-    public void I_successfully_login() throws Throwable {
-        I_access_login_page();
-        I_insert_credentials("eu@fast.com", "eu.pass");
-        I_click_login_button();
-        I_check_if_user_was_logged_in();
-    }
-
-    private void errorMessageShouldBePresent(String expectedMessage) {
-        WebElement errorMessage = driver.findElement(By.className("error-msg"));
-        assertThat(expectedMessage, is(errorMessage.getText()));
-    }
-
-    private void insertEmail(String expectedEmail) {
-        WebElement email = driver.findElement(By.id("email"));
-        email.sendKeys(expectedEmail);
-    }
-
-    private void insertPassword(String expectedPassword) {
-        WebElement password = driver.findElement(By.id("password"));
-        password.sendKeys(expectedPassword);
+        loginPage.enterEmail(expectedEmail);
+        loginPage.enterPassword(expectedPassword);
     }
 
 }

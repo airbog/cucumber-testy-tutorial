@@ -18,6 +18,3 @@ Feature: Login
     | eu@fast.com      |              | Please enter your password! |
     |                  |              | Please enter your email!    |
     | invalid@fast.com | invalid.pass | Invalid user or password!   |
-
-  Scenario:
-    Given I successfully login
