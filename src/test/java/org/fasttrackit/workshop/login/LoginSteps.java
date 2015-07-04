@@ -18,7 +18,7 @@ import static org.hamcrest.core.Is.is;
 public class LoginSteps extends TestBaseNative {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginSteps.class);
 
-    LoginPage loginPage;
+    LoginPage loginPage = new LoginPage();
 
     @Given("^I access login page$")
     public void I_access_login_page() {
@@ -33,8 +33,7 @@ public class LoginSteps extends TestBaseNative {
 
     @When("^I click login button$")
     public void I_click_login_button() {
-        WebElement loginButton = driver.findElement(By.id("loginButton"));
-        loginButton.click();
+        loginPage.clickOnLoginButton(driver);
     }
 
     @Then("^I check if user was logged in$")
@@ -44,7 +43,7 @@ public class LoginSteps extends TestBaseNative {
     }
 
     @Then("^I expect \"([^\"]*)\" error message$")
-    public void I_expect_message(String expectedMessage) throws Throwable {
+    public void I_expect_message(String expectedMessage) {
         errorMessageShouldBePresent(expectedMessage);
     }
 
@@ -52,6 +51,14 @@ public class LoginSteps extends TestBaseNative {
     public void I_enter_credentials(String expectedEmail, String expectedPassword) {
         insertEmail(expectedEmail);
         insertPassword(expectedPassword);
+    }
+
+    @Given("^I successfully login$")
+    public void I_successfully_login() throws Throwable {
+        I_access_login_page();
+        I_insert_credentials("eu@fast.com", "eu.pass");
+        I_click_login_button();
+        I_check_if_user_was_logged_in();
     }
 
     private void errorMessageShouldBePresent(String expectedMessage) {
