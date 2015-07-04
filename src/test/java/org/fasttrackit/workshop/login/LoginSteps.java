@@ -1,5 +1,6 @@
 package org.fasttrackit.workshop.login;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -46,4 +47,10 @@ public class LoginSteps extends TestBase {
         loginView.enterPassword(expectedPassword);
     }
 
+    @Given("^I successfully login$")
+    public void I_successfully_login() throws Throwable {
+        I_access_login_page();
+        I_enter_credentials(PreferencesSteps.VALID_EMAIL, PreferencesSteps.VALID_PASSWORD);
+        I_click_login_button();
+    }
 }
